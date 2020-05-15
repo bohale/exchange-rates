@@ -13,6 +13,8 @@ function App() {
   const [amount, setAmount] = useState(1)
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
 
+  let today = new Date().toLocaleString();  
+
   let toAmount, fromAmount;
   if(amountInFromCurrency) {
     fromAmount = amount;
@@ -21,18 +23,6 @@ function App() {
     toAmount = amount;
     fromAmount = amount / exchangeRate;
   }
-
-  useEffect(() => {
-    fetch(BASE_URL)
-    .then(res => res.json())
-    .then(data => {
-      const firstCurrency = Object.keys(data.rates)[0]
-      setCurrencyOptions([data.base, ...Object.keys(data.rates)])  //options set to all values returned from API
-      setFromCurrency(data.base)
-      setToCurrency(firstCurrency)
-      setExchangeRate(data.rates[firstCurrency])
-    })
-  }, []) 
 
   useEffect(() => {
     if(fromCurrency != null && toCurrency != null) {
@@ -44,6 +34,20 @@ function App() {
     }
    
   }, [fromCurrency, toCurrency])            //if this state changes
+
+  useEffect(() => {
+    fetch(BASE_URL)
+    .then(res => res.json())
+    .then(data => {
+      const firstCurrency = Object.keys(data.rates)[0]
+      setCurrencyOptions([data.base, ...Object.keys(data.rates)])  //options set to all values returned from API
+      setFromCurrency(data.base)
+      setToCurrency(firstCurrency)
+      setExchangeRate(data.rates[firstCurrency])
+    })
+  }, [])                                   //when there's no initial state
+
+
 
   function handleFromAmountChange(e) {
     setAmount(e.target.value)
@@ -59,6 +63,7 @@ function App() {
     return (
       <>
         <h1>Converter</h1>
+        <h4> {today} </h4>
         <CurrencyRow
           currencyOptions={currencyOptions}
           selectedCurrency={fromCurrency}

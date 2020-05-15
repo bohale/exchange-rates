@@ -9,8 +9,7 @@ export default function CurrencyRow(props) {
         amount,
         onChangeAmount
     } = props
-
-    console.log(props.amount)
+ 
     return (
         <div>
            <input type="number" className="input" value={amount} onChange={onChangeAmount}/>
